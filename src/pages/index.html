@@ -6,6 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>index--webpack4 multiple pages</title>
     <link rel="stylesheet" href="js/lib/swiper/swiper.min.css">
+    <style type="text/css">
+        .bg-from-html {
+            width: 100px;
+            height: 100px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+    </style>
 </head>
 <body>
     <div class="menu">
@@ -33,6 +42,10 @@
         <img src="<%= require('../images/webpack.svg') %>" alt="webpack" title="webpack">
         <p>以下图片大于url-loader限制大小，则不转换</p>
         <img src="<%= require('../images/webpack.png') %>" alt="webpack" title="webpack">
+        <p>css里面背景图片</p>
+        <div class="bg-from-csslink"></div>
+        <p>html里面背景图片</p>
+        <div class="bg-from-html" style="background-image: url(<%= require('../images/webpack.png') %>);"></div>
     </div>
     <div>
         <p>iconfont</p>

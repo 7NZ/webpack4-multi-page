@@ -17,7 +17,7 @@ module.exports = {
     plugin_intru: './src/js/plugin-intru.js',
   },
   output: {
-    filename: 'js/[name].js',
+    filename: 'js/[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
@@ -65,7 +65,12 @@ module.exports = {
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+          devMode ? 'style-loader' : {
+            loader:MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../'
+            }
+          },
           'css-loader',
           // https://stackoverflow.com/questions/41609397/uncaught-error-module-build-failed-error-no-postcss-config-found-in-ng2-adm/41758053#41758053
           'postcss-loader',
@@ -81,7 +86,7 @@ module.exports = {
               name: '[name]-[hash:6].[ext]',
               outputPath: 'images/',
               limit: 8192,
-              publicPath: 'images/'
+              // publicPath: '../images/'
             }
           }
         ]
@@ -95,7 +100,7 @@ module.exports = {
               name: '[name].[ext]',
               outputPath: 'css/font/',
               limit: 10000,
-              publicPath: 'css/font/'
+              // publicPath: '../css/font/'
             }
           }
         ]
@@ -122,7 +127,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: devMode ? 'css/[name].css' : 'css/[name].[hash].css',
+      filename: devMode ? 'css/[name].css' : 'css/[name].[contenthash].css',
       // chunkFilename: devMode ? 'css/[id].css' : 'css/[id].[hash].css',
     }),
     new OptimizeCssAssetsPlugin({
