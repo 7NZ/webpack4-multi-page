@@ -1,0 +1,33 @@
+@import 'iconfont/iconfont.css';
+
+img {
+    max-width: 100%;
+}
+
+.menu {
+    position: sticky;
+    top: -1px;
+    background: #fff;
+    padding: 2px 0;
+    z-index: 100;
+    a {
+        color: cornflowerblue;
+        text-decoration: none;
+    }
+    ul {
+        padding: 0;
+        > li {
+            display: inline-block;
+            padding: 0 8px;
+            + li {
+                border-left: 1px solid #eee;
+            }
+            &.cur {
+                font-weight: bold;
+                a {
+                    color: #333
+                }
+            }
+        }
+    }
+}
