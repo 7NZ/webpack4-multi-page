@@ -14,7 +14,11 @@ webpack4多页面
 
 头开始用的webpack4 自带的mode来区分，发现在配置文件webpack.common.js里面区分不了。于是尝试在package.json 里面配置命令，发现还是区分不了，不知道是不是不会配置的问题。  
 后来尝试了`cross-env`依赖包，在package.json里面使用，scripts选项里面（e.g.,`"dev": "cross-env NODE_ENV=development webpack-dev-server --colors --progress --config webpack.dev.js"`）。  
-这样在webpack.common.js和src下面的js都能判断，判断的时候`const devMode = process.env.NODE_ENV !== 'production'`
+~~这样在webpack.common.js和src下面的js都能判断，判断的时候`const devMode = process.env.NODE_ENV !== 'production'`~~
+
+更新：除了webpack配置文件可以判断package.json里面`cross-env`定义的环境变量，
+在src下面的js中判断环境变量都是从webpack配置中的mode里面读取的，mode 只有 `"development" | "production" | "none"` 三种
+
 
 #### css分离MiniCssExtractPlugin  
 

@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 // const autoprefixer = require('autoprefixer');
@@ -27,9 +27,9 @@ module.exports = {
   },
   optimization: {
     minimizer: [
-      new UglifyJSPlugin({
+      new TerserPlugin({
         test: /\.js(\?.*)?$/i,
-        exclude: "./node_modules",
+        exclude: /\/node_modules/,
       }),
     ],
     splitChunks: {
@@ -160,7 +160,6 @@ module.exports = {
         removeComments: true, // 移除HTML中的注释
         collapseWhitespace: true, // 删除空白符与换行符
         minifyCSS: true, // 压缩内联css
-        //是否压缩html里的js（使用uglify-js进行的压缩，目前es6代码无法压缩https://github.com/jantimon/html-webpack-plugin/issues/929）
         minifyJS: true
       }
     }),
