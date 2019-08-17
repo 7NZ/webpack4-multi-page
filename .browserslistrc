@@ -1,0 +1,9 @@
+# Browsers that we support
+
+last 5 version
+> 5%
+Android >= 4.0
+iOS >= 9
+not ie <= 9
+maintained node versions
+not dead
