@@ -1,12 +1,12 @@
 {
   "name": "webpack4-multi-page",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --colors --progress --config webpack.dev.js",
-    "build": "cross-env NODE_ENV=production webpack --colors --progress --config webpack.prod.js"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --colors --progress --config ./build/webpack.dev.js",
+    "build": "cross-env NODE_ENV=production webpack --colors --progress --config ./build/webpack.prod.js"
   },
   "keywords": [],
   "author": "",

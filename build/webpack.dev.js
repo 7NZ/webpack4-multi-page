@@ -6,7 +6,7 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './dist',
+    contentBase: '../dist',
     // watchContentBase: true,
     // 热模块替换，配合HotModuleReplacementPlugin
     // html-webpack-plugin 当改变html文件时无法更新，也不会刷新页面

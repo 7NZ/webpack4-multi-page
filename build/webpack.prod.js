@@ -1,4 +1,4 @@
-// const webpack = require('webpack');
+const path = require('path');
 const merge = require('webpack-merge');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -15,7 +15,9 @@ module.exports = merge(common, {
   plugins: [
     // clean 'dist' directory before webpack package
     new CleanWebpackPlugin({
-      cleanAfterEveryBuildPatterns: ['dist']
+      cleanAfterEveryBuildPatterns: ['../dist'],
+      dry: false,
+      dangerouslyAllowCleanPatternsOutsideProject: true,
     }),
     new TerserPlugin({
       sourceMap: true
