@@ -13,9 +13,10 @@ const prodMode = process.env.NODE_ENV  === 'production' ? 'production' : 'none';
 module.exports = merge(common, {
   mode: prodMode,
   plugins: [
+    // https://github.com/johnagan/clean-webpack-plugin
     // clean 'dist' directory before webpack package
-    new CleanWebpackPlugin({
-      cleanAfterEveryBuildPatterns: ['../dist'],
+    new CleanWebpackPlugin({ // 配置出错可能无法打包出dist输出文件
+      cleanOnceBeforeBuildPatterns: ['../dist'],
       dry: false,
       dangerouslyAllowCleanPatternsOutsideProject: true,
     }),
