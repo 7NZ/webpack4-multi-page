@@ -6,12 +6,12 @@ webpack4多页面
 ## 命令
 
 1. `npm install` 安装
-1. `npm run dev` 开发
-2. `npm run build` 生产环境打包
+2. `npm run dev` 开发
+3. `npm run build` 生产环境打包
 
 ## 文件目录
 
-```
+```none
 |
 |- bulid/  webpack环境配置文件
 |   |
@@ -42,32 +42,39 @@ webpack4多页面
 
 ### html-webpack-plugin配置
 
-页面配置如下
+主要是通过读取html文件来循环遍历配置多页面，入口文件js需要和html文件命名相同
+
+配置统一引入了公共文件chunk，如果有页面不需要的话再单独配置一个，webpack配置`entry`页需要单独再加一个
 
 ```js
-...PAGES.map(page => new HtmlWebpackPlugin({
-  chunks: [page.slice(0, page.lastIndexOf('.')), 'common'],
-  filename: `${page}`,
-  template: `${PAGES_DIR}/${page}`,
-  inject: 'body',
-  minify: {
-    removeComments: true, // 移除HTML中的注释
-    collapseWhitespace: true, // 删除空白符与换行符
-    minifyCSS: true, // 压缩内联css
-    minifyJS: true
+module.exports = {
+  entry: {
+    other: '../src/js/other.js',
+    ...entrys
   }
-})),
-```
+}
 
-主要是通过读取html文件来循环遍历配置多页面,入口文件需要和html文件命名相同
-上面的配置统一引入了公共文件chunk，如果有页面不需要的话再单独配置一个
-
-```js
 new HtmlWebpackPlugin({
   chunks: ['other'],
   filename:'other.html',
-  template: path.resolve(__dirname, '../src/pages/other.html'),
+  template: path.resolve(__dirname, '../src/pages/other/other.html'),
   inject: 'body'
+})
+```
+
+如果不需要页面引入js或者css文件，`inject`设置为false
+
+```js
+new HtmlWebpackPlugin({
+    filename:'other.html',
+    template: path.resolve(__dirname, '../src/pages/other/other.html'),
+    inject: false, // 不会向页面注入js或css文件
+    minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        minifyCSS: true,
+        minifyJS: true
+    }
 })
 ```
 
@@ -81,7 +88,6 @@ new HtmlWebpackPlugin({
 
 更新：除了webpack配置文件可以判断package.json里面`cross-env`定义的环境变量，
 在src下面的js中判断环境变量都是从webpack配置中的mode里面读取的，mode 只有 `"development" | "production" | "none"` 三种
-
 
 #### css分离MiniCssExtractPlugin  
 
@@ -130,7 +136,7 @@ new HtmlWebpackPlugin({
     'postcss-loader',
     'sass-loader'
   ]
-}
+},
 {
   test: /\.(gif|png|jpe?g|svg)$/i,
   use: [
@@ -146,8 +152,8 @@ new HtmlWebpackPlugin({
 }
 ```
 
-上面css的处理也可以不要style-loader直接用MiniCssExtractPlugin.loader参照官方文档https://github.com/webpack-contrib/mini-css-extract-plugin
-    
+上面css的处理也可以不要style-loader直接用MiniCssExtractPlugin.loader参照官方文档<https://github.com/webpack-contrib/mini-css-extract-plugin>
+
 #### css和js公共代码分离splitChunks
 
 如果配置了splitChunks来分离公共代码，那么在html-webpack-plugin插件里面就必须在chunks选项加上splitChunks的chunk，否则你引入的其他入口文件里面的js代码将会无法执行，如果开发环境下使用了style-loader，入口文件里面引入的css也不会被注入到页面（不用style-loader直接用MiniCssExtractPlugin.loader即可解决）。  
@@ -180,4 +186,3 @@ special: {
  ```
 
 需要注意的是对于css的规则，还是会生成对应的js文件，里面有一行代码，并被页面引入。就是说以上2个对css匹配的规则都会生成对应name的js文件  
-

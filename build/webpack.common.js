@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -24,7 +24,7 @@ let entrys = {};
 PAGES.forEach(page => {
   let name = page.slice(0, page.lastIndexOf('.'));
   entrys[name] = `${ENTRY_DIR}/${name}.js`;
-})
+});
 
 module.exports = {
   entry: entrys,
@@ -34,7 +34,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '../src'),
+      '@': path.resolve(__dirname, SRC_DIR),
     }
   },
   optimization: {
@@ -116,6 +116,17 @@ module.exports = {
         ]
       },
       {
+        enforce: 'pre',
+        test: /\.js$/,
+        exclude: /node_modules/,
+        include: path.resolve(__dirname, SRC_DIR),
+        loader: 'eslint-loader',
+        options: {
+          emitWarning: true,
+          configFile: path.resolve(__dirname, '../.eslintrc.js')
+        }
+      },
+      {
         test: /\.m?js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
@@ -151,7 +162,7 @@ module.exports = {
     // You need to link it in HTML files
     new CopyPlugin([
       { 
-        from: path.resolve(__dirname, '../src/js/lib'),
+        from: path.resolve(__dirname, `${SRC_DIR}/js/lib`),
         to: path.resolve(__dirname, `${OUTPUT_DIR}/js/lib`),
         force: true
       }
