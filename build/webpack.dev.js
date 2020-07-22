@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
@@ -15,7 +15,7 @@ module.exports = merge(common, {
     port: 8070,
     // 设置代理
     proxy: {
-    '/apis': {
+      '/apis': {
         target: 'http://127.0.0.1',
         secure: false,
         changeOrigin: true,

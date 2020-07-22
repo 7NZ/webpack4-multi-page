@@ -160,13 +160,13 @@ module.exports = {
     }),
     // copy js library if you don't want to import it in your own js files
     // You need to link it in HTML files
-    new CopyPlugin([
-      { 
+    new CopyPlugin({
+      patterns: [{
         from: path.resolve(__dirname, `${SRC_DIR}/js/lib`),
         to: path.resolve(__dirname, `${OUTPUT_DIR}/js/lib`),
         force: true
-      }
-    ]),
+      }]
+    }),
     ...PAGES.map(page => new HtmlWebpackPlugin({
       chunks: [page.slice(0, page.lastIndexOf('.')), 'common'],
       filename: `${page}`,
