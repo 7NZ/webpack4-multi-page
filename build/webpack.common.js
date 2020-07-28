@@ -38,12 +38,6 @@ module.exports = {
     }
   },
   optimization: {
-    minimizer: [
-      new TerserPlugin({
-        test: /\.js(\?.*)?$/i,
-        exclude: /\/node_modules/,
-      }),
-    ],
     splitChunks: {
       cacheGroups: {
         // 打包公共模块，js和css公共代码都会被提取出来
