@@ -1,6 +1,6 @@
-# webpack4-multi-page
+# webpack-multi-page
 
-webpack4多页面  
+使用webpack5的多页面构建工具 
 作为项目参考配置，找到自己合适的。一句话：适合自己的就是最好的
 
 ## 命令

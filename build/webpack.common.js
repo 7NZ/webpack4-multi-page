@@ -7,7 +7,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
-
+const ASSET_PATH = process.env.ASSET_PATH || '';
 const OUTPUT_DIR = '../dist';
 const SRC_DIR = '../src';
 
@@ -31,12 +31,14 @@ module.exports = {
   output: {
     filename: 'js/[name].[contenthash].js',
     path: path.resolve(__dirname, OUTPUT_DIR),
+    publicPath: ASSET_PATH,
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, SRC_DIR),
     }
   },
+  target: 'web',
   optimization: {
     splitChunks: {
       cacheGroups: {
@@ -47,22 +49,7 @@ module.exports = {
           minChunks: 2, // 表示被引用次数，默认为1
           minSize: 0, // 表示抽取出来的文件在压缩前的最小大小，默认为 30000
           name: 'common' //提取出来的文件命名
-        },
-        /* js: {
-          test: /\.js$/,
-          name: 'public',
-          chunks: 'all',
-          minChunks: 2,
-          minSize: 0
-        },
-        // 虽然是对css公共代码提取，但是这里还是会生成对应的js文件，里面有一行代码（不会影响页面），并被页面引入
-        css: {
-          test: /\.(css|sass|scss)$/,
-          name: 'common',
-          chunks: 'all',
-          minChunks: 3,
-          minSize: 0
-        }, */
+        }
       }
     }
   },
@@ -89,7 +76,7 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              name: '[name]-[hash:6].[ext]',
+              name: '[name]-[contenthash].[ext]',
               outputPath: 'images/',
               limit: 10000,
             }
@@ -132,6 +119,7 @@ module.exports = {
   plugins: [
     // define global variable
     new webpack.DefinePlugin({
+      'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
       APIROOT: JSON.stringify( devMode ? '/apis' : 'https://www.apidomain.com')
     }),
     // 自动加载模块，而不必到处 import 或 require
