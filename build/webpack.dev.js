@@ -1,12 +1,14 @@
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
+const dirConf = require('./dirConfig.js');
+const OUTPUT_DIR = dirConf.OUTPUT_DIR;
 
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'inline-source-map',
+  devtool: 'eval-source-map',
   devServer: {
-    contentBase: '../dist',
+    contentBase: OUTPUT_DIR,
     // watchContentBase: true,
     // 热模块替换，配合HotModuleReplacementPlugin
     // html-webpack-plugin 当改变html文件时无法更新，也不会刷新页面

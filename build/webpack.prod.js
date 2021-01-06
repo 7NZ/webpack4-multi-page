@@ -1,8 +1,10 @@
 const path = require('path');
 const { merge } = require('webpack-merge');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const common = require('./webpack.common.js');
+
+console.log('env:' + process.env.NODE_ENV);
 
 // mode 只有 "development" | "production" | "none" 三种
 // 在package.json中定义了一个测试服环境打包命令，但是其中的NODE_ENV在webpack的配置mode选项中会被覆盖掉
@@ -12,16 +14,16 @@ const prodMode = process.env.NODE_ENV  === 'production' ? 'production' : 'none';
 
 module.exports = merge(common, {
   mode: prodMode,
+  devtool: prodMode === 'production' ? 'nosources-source-map' : 'eval-cheap-source-map',
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin()
+    ]
+  },
   plugins: [
     // https://github.com/johnagan/clean-webpack-plugin
     // clean 'dist' directory before webpack package
-    new CleanWebpackPlugin({ // 配置出错可能无法打包出dist输出文件
-      cleanOnceBeforeBuildPatterns: ['../dist'],
-      dry: false,
-      dangerouslyAllowCleanPatternsOutsideProject: true,
-    }),
-    new TerserPlugin({
-      sourceMap: true
-    })
+    new CleanWebpackPlugin(),
   ]
 });

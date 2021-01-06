@@ -3,18 +3,18 @@ const fs = require('fs');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
+const dirConf = require('./dirConfig.js');
+
 const ASSET_PATH = process.env.ASSET_PATH || '';
-const OUTPUT_DIR = '../dist';
-const SRC_DIR = '../src';
+const OUTPUT_DIR = dirConf.OUTPUT_DIR;
+const SRC_DIR = dirConf.SRC_DIR;
 
 const ENTRY_DIR = path.resolve(__dirname, `${SRC_DIR}/js`);
 const PAGES_DIR = path.resolve(__dirname, `${SRC_DIR}/pages`);
 const PAGES = fs.readdirSync(PAGES_DIR).filter(fileName => fileName.endsWith('.html'));
-
 
 const devMode = process.env.NODE_ENV !== 'production';
 
@@ -31,7 +31,7 @@ module.exports = {
   output: {
     filename: 'js/[name].[contenthash].js',
     path: path.resolve(__dirname, OUTPUT_DIR),
-    publicPath: ASSET_PATH,
+    publicPath: ASSET_PATH
   },
   resolve: {
     alias: {
@@ -40,6 +40,12 @@ module.exports = {
   },
   target: 'web',
   optimization: {
+    minimize: true,
+    minimizer: [
+      // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+      // `...`
+      new CssMinimizerPlugin(),
+    ],
     splitChunks: {
       cacheGroups: {
         // 打包公共模块，js和css公共代码都会被提取出来
@@ -58,12 +64,7 @@ module.exports = {
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          devMode ? 'style-loader' : {
-            loader:MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: '../'
-            }
-          },
+          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
           // https://stackoverflow.com/questions/41609397/uncaught-error-module-build-failed-error-no-postcss-config-found-in-ng2-adm/41758053#41758053
           'postcss-loader',
@@ -72,29 +73,17 @@ module.exports = {
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              name: '[name]-[contenthash].[ext]',
-              outputPath: 'images/',
-              limit: 10000,
-            }
-          }
-        ]
+        type: 'asset',
+        generator: {
+          filename: 'images/[hash][ext][query]'
+        }
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'css/font/',
-              limit: 10000,
-            }
-          }
-        ]
+        type: 'asset',
+        generator: {
+          filename: 'css/font/[hash][ext][query]'
+        }
       },
       {
         enforce: 'pre',
@@ -131,14 +120,7 @@ module.exports = {
       // Options similar to the same options in webpackOptions.output
       // both options are optional
       filename: devMode ? 'css/[name].css' : 'css/[name].[contenthash].css',
-    }),
-    new OptimizeCssAssetsPlugin({
-      assetNameRegExp: /\.css$/g,
-      cssProcessor: require('cssnano'),
-      cssProcessorPluginOptions: {
-        preset: ['default', { discardComments: { removeAll: true } }],
-      },
-      canPrint: true
+      chunkFilename: devMode ? 'css/[id].css' : 'css/[id].[contenthash].css',
     }),
     // copy js library if you don't want to import it in your own js files
     // You need to link it in HTML files
